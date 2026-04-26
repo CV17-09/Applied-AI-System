@@ -32,11 +32,7 @@ Additional components:
 - **Logging** tracks system behavior and errors.
 - **Pytest Testing** validates AI and scheduling logic.
 
-![UML Diagram](images/system_architecture.png)
-
-## 📸 Demo
-
-![PawPal App](images/pawpal_demo.png)
+![UML Diagram](diagrams/system_architecture.png)
 
 ---
 
