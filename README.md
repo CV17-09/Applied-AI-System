@@ -174,7 +174,7 @@ To ensure the AI system works correctly and consistently, I implemented multiple
 
 ## Demo Video
 
-Loom Walkthrough: https://your-loom-link-here
+Loom Walkthrough: https://www.loom.com/share/5812a02e7d8b4849ac1c82d7583d8c0a
 
 ## Project Link
 
