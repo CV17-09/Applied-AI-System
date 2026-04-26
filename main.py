@@ -1,9 +1,11 @@
 from datetime import datetime
 from pawpal_system import Owner, Pet, Task, Scheduler
+from ai_agent import plan_pet_tasks
 
 
 def print_tasks(title: str, tasks: list[Task]) -> None:
     print(f"\n{title}\n")
+
     if not tasks:
         print("No tasks found.")
         return
@@ -31,6 +33,13 @@ def main():
     cat.add_task(Task("Clean Litter Box", 15, "Daily", today, "10:00", priority=4))
     cat.add_task(Task("Give Treat", 5, "Once", today, "12:00", completed=True, priority=1))
 
+    # AI agentic workflow integration
+    ai_request = "Buddy needs feeding, a walk, grooming, and a vet visit soon."
+    ai_tasks = plan_pet_tasks(ai_request)
+
+    for task in ai_tasks:
+        dog.add_task(task)
+
     scheduler = Scheduler(owner)
 
     print_tasks("🐾 All Tasks", scheduler.retrieve_all_tasks())
@@ -41,6 +50,7 @@ def main():
 
     print("\n⚠ Conflict Warnings\n")
     warnings = scheduler.detect_schedule_conflicts()
+
     if warnings:
         for warning in warnings:
             print(warning)

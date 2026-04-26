@@ -1,9 +1,10 @@
 import streamlit as st
 from datetime import datetime
 from pawpal_system import Owner, Pet, Task, Scheduler
+from ai_agent import plan_pet_tasks
 
 
-st.set_page_config(page_title="PawPal+", page_icon="🐾", layout="wide")
+st.set_page_config(page_title="Applied AI System", page_icon="🐾", layout="wide")
 
 
 def task_to_row(task: Task) -> dict:
@@ -38,14 +39,54 @@ def load_demo_data() -> Owner:
 
     owner.add_pet(dog)
     owner.add_pet(cat)
+
     return owner
 
 
-st.title("🐾 PawPal+")
-st.write("A smarter pet care scheduler for organizing daily pet tasks.")
+st.title("🐾 Applied AI System")
+st.write(
+    "An AI-powered pet care planning and scheduling system that converts natural-language pet care requests into organized tasks."
+)
 
 # Load data
 owner = load_demo_data()
+scheduler = Scheduler(owner)
+
+# AI Planner Section
+st.subheader("🤖 AI Pet Care Planner")
+
+ai_request = st.text_area(
+    "Describe what your pet needs:",
+    placeholder="Example: Buddy needs feeding, a walk, grooming, and a vet visit soon.",
+)
+
+selected_pet_name = st.selectbox(
+    "Which pet should receive the AI-generated tasks?",
+    [pet.name for pet in owner.pets],
+)
+
+if st.button("Generate AI Tasks"):
+    try:
+        ai_tasks = plan_pet_tasks(ai_request)
+
+        selected_pet = next(pet for pet in owner.pets if pet.name == selected_pet_name)
+
+        for task in ai_tasks:
+            selected_pet.add_task(task)
+
+        st.success(f"Generated and added {len(ai_tasks)} task(s) for {selected_pet_name}.")
+
+        if ai_tasks:
+            st.table([task_to_row(task) for task in ai_tasks])
+        else:
+            st.info("No tasks were generated. Try mentioning feeding, walking, grooming, litter, or vet care.")
+
+    except ValueError as error:
+        st.error(str(error))
+    except Exception as error:
+        st.error(f"Something went wrong while generating AI tasks: {error}")
+
+# Refresh scheduler after possible AI task additions
 scheduler = Scheduler(owner)
 
 # Sidebar controls
@@ -53,17 +94,17 @@ st.sidebar.header("Schedule Options")
 
 sort_option = st.sidebar.selectbox(
     "Sort tasks by",
-    ["priority", "time"]
+    ["priority", "time"],
 )
 
 pet_filter = st.sidebar.selectbox(
     "Filter by pet",
-    ["All"] + [pet.name for pet in owner.pets]
+    ["All"] + [pet.name for pet in owner.pets],
 )
 
 status_filter = st.sidebar.selectbox(
     "Filter by status",
-    ["All", "Pending", "Completed"]
+    ["All", "Pending", "Completed"],
 )
 
 due_today_only = st.sidebar.checkbox("Show only tasks due today", value=True)
@@ -72,6 +113,7 @@ due_today_only = st.sidebar.checkbox("Show only tasks due today", value=True)
 pet_name = None if pet_filter == "All" else pet_filter
 
 completed_value = None
+
 if status_filter == "Pending":
     completed_value = False
 elif status_filter == "Completed":
@@ -79,13 +121,16 @@ elif status_filter == "Completed":
 
 # Build filtered task list
 if due_today_only:
-    filtered_tasks = scheduler.filter_tasks_due_today(
-        completed=completed_value if completed_value is not None else False,
-        pet_name=pet_name,
-    ) if status_filter != "All" else scheduler.filter_tasks_due_today(
-        completed=None,
-        pet_name=pet_name,
-    )
+    if status_filter != "All":
+        filtered_tasks = scheduler.filter_tasks_due_today(
+            completed=completed_value,
+            pet_name=pet_name,
+        )
+    else:
+        filtered_tasks = scheduler.filter_tasks_due_today(
+            completed=None,
+            pet_name=pet_name,
+        )
 else:
     filtered_tasks = scheduler.filter_tasks(
         completed=completed_value,
@@ -133,21 +178,26 @@ with col2:
     st.write(f"**Available Time:** {owner.available_time} minutes")
 
     st.subheader("Pets")
+
     for pet in owner.pets:
         st.write(f"- **{pet.name}** ({pet.species}, age {pet.age})")
 
     st.subheader("Recurring Tasks")
+
     recurring_tasks = scheduler.get_recurring_tasks()
+
     if recurring_tasks:
         st.table([task_to_row(task) for task in recurring_tasks])
     else:
         st.info("No recurring tasks found.")
 
     st.subheader("Conflict Warnings")
+
     warnings = scheduler.detect_schedule_conflicts()
 
     if warnings:
         st.warning("Some pet care tasks overlap. Review these conflicts:")
+
         for warning in warnings:
             st.warning(warning)
     else:
