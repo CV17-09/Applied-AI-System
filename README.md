@@ -1,91 +1,204 @@
-# PawPal+ (Module 2 Project)
+# Applied AI System 🐾
 
-You are building **PawPal+**, a Streamlit app that helps a pet owner plan care tasks for their pet.
+## Title and Summary
+Applied AI System is an AI-powered pet care planning and scheduling application built on top of the PawPal system. It allows users to input natural-language requests (e.g., “My dog needs feeding and a walk”) and automatically converts them into structured tasks, prioritizes them, and generates an optimized schedule.
 
-## Scenario
+This project demonstrates how AI can be integrated into real-world applications to transform unstructured input into actionable, organized workflows.
 
-A busy pet owner needs help staying consistent with pet care. They want an assistant that can:
+---
 
-- Track pet care tasks (walks, feeding, meds, enrichment, grooming, etc.)
-- Consider constraints (time available, priority, owner preferences)
-- Produce a daily plan and explain why it chose that plan
+## Original Project (Modules 1–3)
 
-Your job is to design the system first (UML), then implement the logic in Python, then connect it to the Streamlit UI.
+This project is based on my original project: **PawPal (AI110 Module 2)**.
 
-## What you will build
+PawPal was a pet care scheduling system designed to help pet owners manage daily and recurring tasks for their pets. It allowed users to create tasks, assign priorities, filter schedules, and detect conflicts.
 
-Your final app should:
+In this version, I extended PawPal by integrating an AI-driven task planning system that interprets natural-language input and dynamically generates structured tasks.
 
-- Let a user enter basic owner + pet info
-- Let a user add/edit tasks (duration + priority at minimum)
-- Generate a daily schedule/plan based on constraints and priorities
-- Display the plan clearly (and ideally explain the reasoning)
-- Include tests for the most important scheduling behaviors
+---
 
-## Getting started
+## Architecture Overview
 
-### Setup
+The system consists of three main components:
 
-```bash
-python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-```
+1. **Streamlit Interface** – Handles user interaction and displays results.
+2. **AI Agent (plan_pet_tasks)** – Processes natural-language input, extracts tasks, and converts them into structured Task objects.
+3. **Scheduler Engine** – Organizes tasks, prioritizes them, detects conflicts, and generates a daily plan.
 
-### Suggested workflow
+### Data Flow:
+User Input → AI Agent → Task Creation → Scheduler → Output
 
-1. Read the scenario carefully and identify requirements and edge cases.
-2. Draft a UML diagram (classes, attributes, methods, relationships).
-3. Convert UML into Python class stubs (no logic yet).
-4. Implement scheduling logic in small increments.
-5. Add tests to verify key behaviors.
-6. Connect your logic to the Streamlit UI in `app.py`.
-7. Refine UML so it matches what you actually built.
+Additional components:
+- **Logging** tracks system behavior and errors.
+- **Pytest Testing** validates AI and scheduling logic.
 
-## Smarter Scheduling
+![UML Diagram](images/system_architecture.png)
 
-The PawPal+ scheduler includes several intelligent features to improve pet care planning:
-
-- **Sorting Tasks**: Tasks can be sorted by priority or time required to optimize scheduling.
-- **Filtering**: Tasks can be filtered by completion status and by specific pets.
-- **Recurring Tasks**: Daily and weekly tasks automatically generate a new instance after completion.
-- **Conflict Detection**: The system detects when multiple tasks are scheduled at the same time and provides warnings instead of failing.
-- **Time Constraints**: The scheduler ensures that selected tasks fit within the owner's available time.
-
-These features make the system more realistic and useful for managing daily pet care responsibilities.
-
-## 🚀 Features
-
-PawPal+ includes several intelligent scheduling features:
-
-- **Priority-Based Scheduling**  
-  Automatically selects the most important tasks first (e.g., feeding, medication).
-
-- **Sorting by Time or Priority**  
-  Tasks can be organized by shortest duration or highest priority.
-
-- **Task Filtering**  
-  Filter tasks by:
-  - Pet name
-  - Completion status (Pending / Completed)
-  - Due date (Today only)
-
-- **Recurring Tasks**  
-  Daily and weekly tasks automatically generate a new instance after completion.
-
-- **Conflict Detection**  
-  Detects when multiple tasks are scheduled at the same time and displays warnings.
-
-- **Time Constraint Handling**  
-  Ensures the total scheduled tasks fit within the owner's available time.
-
-- **Plan Explanation**  
-  Provides a clear explanation of why tasks were selected.
-
-  ## 🧩 System Architecture (UML)
-
-![UML Diagram](images/uml_final.png)
-
-  ## 📸 Demo
+## 📸 Demo
 
 ![PawPal App](images/pawpal_demo.png)
+
+---
+
+## Setup Instructions
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/CV17-09/applied-ai-system.git
+cd applied-ai-system
+```
+## Install dependencies
+pip install -r requirements.txt
+
+## Run the application
+streamlit run app.py
+
+## Run tests
+pytest
+
+## Sample Interactions
+
+### Example 1
+
+Input:
+
+Buddy needs feeding and a walk
+
+Output:
+
+AI Feeding (priority: high)
+AI Walk (priority: medium)
+
+### Example 2
+
+Input:
+
+My dog needs grooming and a vet visit
+
+Output:
+
+AI Grooming (priority: medium)
+AI Vet Visit (priority: high)
+
+### Example 3
+
+Input:
+
+Clean litter and feed the cat
+
+Output:
+
+AI Feeding
+AI Litter Cleaning
+
+## Design Decisions
+
+* Rule-based AI vs LLM: I chose a rule-based AI agent for reliability and simplicity. This ensures deterministic outputs and avoids dependency on external APIs.
+* Task Object Integration: Instead of returning raw text or dictionaries, the AI generates Task objects so it integrates directly with the scheduler.
+* Separation of Concerns:
+  - AI Agent handles interpretation
+  - Scheduler handles planning
+  - UI handles interaction
+* Streamlit UI: Chosen for rapid prototyping and easy visualization of results.
+
+Trade-offs:
+
+* The AI is not as flexible as a large language model.
+* However, it is more predictable, testable, and reproducible.
+
+## Testing Summary
+Testing was implemented using Pytest.
+
+### What worked:
+- Task extraction from user input
+- Scheduler logic (sorting, filtering, planning)
+- Conflict detection
+- AI validation (including empty input handling)
+
+### Challenges:
+* Import path issues when running tests
+* Ensuring AI outputs matched expected Task objects
+* Handling edge cases like empty input
+
+## Ethical Reflection and AI Collaboration
+
+### Limitations and Biases
+
+This system uses a rule-based AI approach, which means it relies on specific keywords (such as “feed,” “walk,” or “vet”) to generate tasks. As a result, it has limited understanding of context and may miss tasks if the user uses different phrasing or more complex language. The system also assumes typical pet care routines, which may not apply to all pets, owners, or situations.
+
+---
+
+### Potential Misuse and Prevention
+
+The AI could be misused if users rely on it for critical decisions, such as medical care for pets, since it does not provide professional or veterinary advice. To prevent misuse, the system is designed to:
+- Focus only on basic task planning (not decision-making)
+- Include clear task labels instead of recommendations
+- Allow user review and control before tasks are applied
+
+Future improvements could include warnings for sensitive topics (e.g., medical concerns).
+
+---
+
+### What Surprised Me
+
+While testing, I was surprised that the AI initially seemed to work well, but failed in simple edge cases like empty input. This showed that even basic AI systems require strong validation and testing. After adding input checks and improving task structure, the system became more reliable and predictable.
+
+---
+
+### Collaboration with AI
+
+AI tools played an important role in helping me build and refine this project.
+
+- **Helpful Suggestion**: The AI helped me identify how to structure the system by separating the AI agent from the scheduler. This improved the modularity of the project and made the design clearer.
+
+- **Flawed Suggestion**: At one point, the AI suggested returning simple dictionaries instead of Task objects. While this worked initially, it broke integration with the scheduler. I had to correct this by ensuring the AI outputs matched the system’s existing data structures.
+
+---
+
+### Reflection
+
+This project showed me that building AI systems is not just about generating outputs, but about integrating them responsibly into a larger system. It also reinforced the importance of testing, validation, and critical thinking when working with AI-generated suggestions.
+
+## Reliability and Evaluation
+
+To ensure the AI system works correctly and consistently, I implemented multiple reliability checks:
+
+- **Automated Testing**: Pytest was used to validate key functions, including task extraction and scheduler behavior.
+- **Input Validation (Guardrails)**: The AI agent checks for empty or invalid input and raises errors to prevent incorrect processing.
+- **Logging**: The system logs user input and generated tasks to track behavior and debug issues.
+- **Human Evaluation**: Outputs were manually reviewed through the Streamlit interface to confirm that generated tasks matched user intent.
+
+## Demo
+
+![Demo](assets/demo.png)
+![Demo](assets/demo2.png)
+![Demo](assets/demo3.png)
+![Demo](assets/demo4.png)
+![Demo](assets/demo5.png)
+
+## Demo Video
+
+Loom Walkthrough: https://your-loom-link-here
+
+## Project Link
+
+GitHub Repository: https://github.com/CV17-09/applied-ai-system
+
+## Portfolio Reflection
+
+This project demonstrates my ability to design and build an end-to-end AI system, not just a model. I integrated natural language processing into an existing application, added a retrieval component, implemented an agentic workflow with explainability, and ensured reliability through testing and evaluation.
+
+It reflects my approach as an AI engineer: building systems that are not only functional, but also transparent, testable, and aligned with real user needs.
+
+### Results
+
+- 13 out of 13 tests passed after fixing input validation issues.
+- The AI initially failed on empty input but was improved by adding validation checks.
+- The system performs reliably for common pet care requests such as feeding, walking, grooming, and vet visits.
+- Accuracy improved after integrating structured Task objects instead of raw text outputs.
+
+## Future Improvements
+* Integrate OpenAI or LLM-based reasoning for more flexible task generation
+* Add Retrieval-Augmented Generation (RAG) for pet care recommendations
+* Improve UI with chat-based interaction
+* Add persistent storage (database)

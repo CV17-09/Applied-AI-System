@@ -67,13 +67,45 @@ selected_pet_name = st.selectbox(
 
 if st.button("Generate AI Tasks"):
     try:
-        ai_tasks = plan_pet_tasks(ai_request)
+        # 🔥 Get full agent output
+        result = plan_pet_tasks(ai_request, return_steps=True)
+
+        ai_tasks = result["tasks"]
+        steps = result["steps"]
+        context = result["retrieved_context"]
+        confidence = result["confidence"]
 
         selected_pet = next(pet for pet in owner.pets if pet.name == selected_pet_name)
 
         for task in ai_tasks:
             selected_pet.add_task(task)
 
+        st.success(f"Generated and added {len(ai_tasks)} task(s) for {selected_pet_name}.")
+
+        st.subheader("📚 Retrieved Pet-Care Knowledge")
+        if context:
+            for note in context:
+                st.info(note)
+        else:
+            st.info("No additional knowledge retrieved.")
+
+        st.subheader("🧠 AI Decision Process")
+        for step in steps:
+            st.write(f"- {step}")
+
+        st.subheader("📊 Confidence Score")
+        st.progress(confidence)
+        st.write(f"{confidence:.2f}")
+
+        if ai_tasks:
+            st.table([task_to_row(task) for task in ai_tasks])
+        else:
+            st.info("No tasks were generated.")
+
+    except ValueError as error:
+        st.error(str(error))
+    except Exception as error:
+        st.error(f"Something went wrong: {error}")
         st.success(f"Generated and added {len(ai_tasks)} task(s) for {selected_pet_name}.")
 
         if ai_tasks:

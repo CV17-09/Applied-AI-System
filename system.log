@@ -1,0 +1,17 @@
+2026-04-26 17:13:44,813 - INFO - NumExpr defaulting to 10 threads.
+2026-04-26 17:14:32,140 - INFO - NumExpr defaulting to 10 threads.
+2026-04-26 17:17:57,656 - INFO - Processing user input: Buddy needs feeding and a walk
+2026-04-26 17:17:57,656 - INFO - Generated 2 tasks.
+2026-04-26 17:17:57,656 - INFO - Processing user input: Milo needs litter cleaning and food
+2026-04-26 17:17:57,656 - INFO - Generated 2 tasks.
+2026-04-26 17:17:57,656 - INFO - Processing user input: My dog needs grooming and a vet visit
+2026-04-26 17:17:57,656 - INFO - Generated 2 tasks.
+2026-04-26 17:17:57,656 - INFO - Processing user input: My pet needs attention
+2026-04-26 17:17:57,656 - INFO - Generated 0 tasks.
+2026-04-26 17:17:57,656 - ERROR - Empty user input received.
+2026-04-26 17:18:45,390 - INFO - NumExpr defaulting to 10 threads.
+2026-04-26 17:18:54,655 - INFO - Processing user input: Buddy needs feeding, a walk, and grooming
+2026-04-26 17:18:54,655 - INFO - Generated 3 tasks.
+2026-04-26 17:21:47,826 - INFO - NumExpr defaulting to 10 threads.
+2026-04-26 17:21:55,622 - INFO - Processing user input: Buddy needs feeding, a walk, grooming, and a vet visit soon.
+2026-04-26 17:21:55,623 - INFO - Generated 4 tasks.
