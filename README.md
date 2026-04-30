@@ -180,6 +180,9 @@ Loom Walkthrough: https://www.loom.com/share/5812a02e7d8b4849ac1c82d7583d8c0a
 
 GitHub Repository: https://github.com/CV17-09/applied-ai-system
 
+## PowerPoint Link
+https://docs.google.com/presentation/d/12sGAhhVz9votCfg_LcWANeJdkX_nI9albrD3jPwLFCI/edit?usp=sharing
+
 ## Portfolio Reflection
 
 This project demonstrates my ability to design and build an end-to-end AI system, not just a model. I integrated natural language processing into an existing application, added a retrieval component, implemented an agentic workflow with explainability, and ensured reliability through testing and evaluation.
